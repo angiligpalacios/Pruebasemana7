@@ -9,6 +9,7 @@ package prueba7_62611135;
  * @author ANGILI PALACIOS
  */
 import java.awt.*;
+import java.awt.event.*;
 import java.io.FileNotFoundException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -34,7 +35,12 @@ public class Ventana extends JFrame {
 
     public Ventana() {
         setTitle("Sabor Casero - Gestión de pedidos");
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+        addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent e) {
+                guardarAlSalir();
+            }
+        });
         setSize(980, 640);
         setLocationRelativeTo(null);
         getContentPane().setBackground(new Color(247, 241, 234));
@@ -47,7 +53,29 @@ public class Ventana extends JFrame {
         tabs.add("Archivos", archivos());
         tabs.addChangeListener(e -> alCambiar());
         add(tabs);
+        cargarAlInicio();
         refrescarInicio();
+    }
+
+    private void cargarAlInicio() {
+        try {
+            Archivos.cargarProductos(datos);
+        } catch (Exception e) {
+        }
+        try {
+            Archivos.cargarPedidos(datos);
+        } catch (Exception e) {
+        }
+    }
+
+    private void guardarAlSalir() {
+        try {
+            Archivos.guardarProductos(datos);
+            Archivos.guardarPedidos(datos);
+        } catch (Exception e) {
+        }
+        dispose();
+        System.exit(0);
     }
 
     private void alCambiar() {
